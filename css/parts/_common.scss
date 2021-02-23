@@ -1,0 +1,37 @@
+// レイアウト
+.l-container {
+  width: 700px;
+  margin: 0 auto;
+}
+
+// ヘッダー
+.header {
+  &__title {
+    font-size: 2.4rem;
+  }
+}
+
+// メイン
+.todo {
+  &__input {
+    display: flex;
+    align-items: center;
+
+    &--area {
+      display: inline-block;
+      margin: 0 20px;
+      flex: 1;
+      height: 30px;
+    }
+
+    &--btn {
+      display: inline-block;
+      width: 50px;
+      height: 30px;
+    }
+  }
+
+  & .list__item {
+    font-size: 2.4rem;
+  }
+}

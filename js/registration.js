@@ -1,3 +1,5 @@
+// 入力値をリストの最後に追加
+
 "use strict";
 
 $(document).ready(function () {
@@ -8,7 +10,7 @@ $(document).ready(function () {
       return;
     }
     let listItem = createList(todoItem);
-    $(".list__item--wrap").append(listItem);
+    $(".todo-list__item--wrap").append(listItem);
     clearValue();
   });
 

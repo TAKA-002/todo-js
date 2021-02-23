@@ -9,21 +9,26 @@
     <script src="./js/jquery-3.5.1.min.js"></script>
   </head>
   <body>
-    <header>
-      <h1>TODO LIST</h1>
+    <header class="l-container header">
+      <h1 class="header__title">TODO LIST</h1>
     </header>
 
-    <main>
+    <main class="l-container todo">
       <form>
-        <input id="new-item" type="text" name="todo" size="50" placeholder="登録したいtodoを記述する" />
-        <input id="registration-btn" type="button" value="登録" />
+        <div class="todo__input">
+          <input class="todo__input--area" id="new-item" type="text" name="todo" size="50" placeholder="登録したいtodoを記述する" />
+          <input class="todo__input--btn" id="registration-btn" type="button" value="登録" />
+        </div>
       </form>
+
+      <div id="todo-list">
+        <ul class="todo-list__item--wrap">
+          <!-- <li class="list__item"></li> -->
+        </ul>
+      </div>
     </main>
 
-    <div id="list">
-      <ul class="list__item--wrap"></ul>
-    </div>
-
+    <script src="./js/showlist.js"></script>
     <script src="./js/registration.js"></script>
   </body>
 </html>
