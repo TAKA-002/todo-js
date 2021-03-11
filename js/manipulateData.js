@@ -5,6 +5,32 @@
 $(document).ready(function () {
   let json = "./data/todo.json";
 
+  /* ==============================================
+  リストを取得して初期表示する
+  ============================================== */
+
+  //jsonからtodolistを配列に格納
+  let todoList = [];
+
+  $.getJSON(json, (data) => {
+    data.todo.forEach((item) => {
+      //itemのstatusに状態を設定（0:未完了 1:完了）
+      item.status = 0;
+      todoList.push(item);
+
+      //inputタグを生成する
+      let input = makeInput(item);
+
+      //spanタグを生成してtitleを格納
+      let span = $("<span>").text(item.title);
+
+      //listタグの子要素にinputタグを追加し、
+      let li = $("<li>").addClass("list__item").append(input);
+      li.append(span);
+      $(".todo-list__item--wrap").append(li);
+    });
+  });
+
   //inputタグを生成する
   function makeInput(itemdata) {
     let input = $("<input>").attr({
@@ -15,41 +41,6 @@ $(document).ready(function () {
     });
     return input;
   }
-
-  //入力値を取得
-  function getInputTodo() {
-    let todoItem = $("#new-item").val();
-    return todoItem;
-  }
-
-  //liタグを生成して、DOMを生成する
-  function createList() {
-    let li = $("<li>").addClass("list__item");
-    return li;
-  }
-
-  //inputタグの入力値をクリアする
-  let clearValue = () => $("#new-item").val("");
-
-  /* ==============================================
-  リストを取得して初期表示する
-  ============================================== */
-  let target = $(".todo-list__item--wrap");
-
-  $.getJSON(json, (data) => {
-    data.todo.forEach((item) => {
-      //inputタグを生成する
-      let input = makeInput(item);
-
-      //spanタグを生成してtitleを格納
-      let span = $("<span>").text(item.title);
-
-      //listタグの子要素にinputタグを追加し、
-      let li = $("<li>").addClass("list__item").append(input);
-      li.append(span);
-      $(target).append(li);
-    });
-  });
 
   /* ==============================================
   入力値をtodoリストに登録する
@@ -72,7 +63,6 @@ $(document).ready(function () {
         aryId.push(obj.todo[i].id);
       }
       let maxId = Math.max(...aryId);
-      console.log(maxId);
 
       //inputタグを生成
       let checkbox = $("<input>").attr({
@@ -90,12 +80,31 @@ $(document).ready(function () {
       list = list.append(span);
 
       // wrapを取得して中にlistタグを挿入;
-      $(target).append(list);
+      $(".todo-list__item--wrap").append(list);
       clearValue();
     });
   });
 
+  //入力値を取得
+  function getInputTodo() {
+    let todoItem = $("#new-item").val();
+    return todoItem;
+  }
+
+  //liタグを生成して、DOMを生成する
+  function createList() {
+    let li = $("<li>").addClass("list__item");
+    return li;
+  }
+
+  //inputタグの入力値をクリアする
+  let clearValue = () => $("#new-item").val("");
+
   /* ==============================================
-    チェックボックスをクリックしたら完了・未完了を取得できる
-    ============================================== */
+  チェックボックスをクリックしたら完了・未完了を取得できる
+  ============================================== */
+  $("#todo-list").on("click", function (e) {
+    console.log(e.target);
+    $(this).prop("checked", true);
+  });
 });
