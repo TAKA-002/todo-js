@@ -9,102 +9,113 @@ $(document).ready(function () {
   リストを取得して初期表示する
   ============================================== */
 
-  //jsonからtodolistを配列に格納
-  let todoList = [];
-
   $.getJSON(json, (data) => {
+    //jsonからtodoリストを配列に格納する際に使用する
+    let arrayTodoList = [];
     data.todo.forEach((item) => {
       //itemのstatusに状態を設定（0:未完了 1:完了）
       item.status = 0;
-      todoList.push(item);
+      arrayTodoList.push(item);
 
       //inputタグを生成する
-      let input = makeInput(item);
+      let checkbox = makeCheckbox(item);
 
-      //spanタグを生成してtitleを格納
-      let span = $("<span>").text(item.title);
+      //labelタグを生成してtitleを格納
+      let label = makeLabel(item).text(item.title);
 
-      //listタグの子要素にinputタグを追加し、
-      let li = $("<li>").addClass("list__item").append(input);
-      li.append(span);
+      //listタグの子要素にlabelタグを追加し、
+      let li = $("<li>").addClass("list__item").append(checkbox[0]);
+      li.append(label[0]);
       $(".todo-list__item--wrap").append(li);
     });
   });
 
-  //inputタグを生成する
-  function makeInput(itemdata) {
-    let input = $("<input>").attr({
-      id: "list--" + itemdata.id,
+  //inputタグを生成する（jqueryオブジェクトとかいうものを返す）
+  function makeCheckbox(item) {
+    let checkbox = $("<input>").attr({
+      id: "list--" + item.id,
       type: "checkbox",
       class: "list__item--checkbox",
-      value: itemdata.title,
+      value: item.title,
     });
-    return input;
+    return checkbox;
+  }
+
+  //labelタグを生成する（jqueryオブジェクトを返す）
+  function makeLabel(item) {
+    let label = $("<label>").attr({
+      for: "list--" + item.id,
+    });
+    return label;
   }
 
   /* ==============================================
   入力値をtodoリストに登録する
   ============================================== */
   $("#registration-btn").on("click", function () {
-    //inputメニューを取得
-    let todoItem = getInputTodo();
+    // 入力されたかチェック
+    //入力された値を取得
+    let inputValue = getInputValue();
 
     //入力ボックスに入力値が空だったら終了
-    if (todoItem === "") {
+    if (inputValue === "") {
       return;
     }
 
-    // jsonデータを取得して、idを取得
-    let aryId = [];
-
+    // jsonデータを取得して、idを取得。次のidを生成する
     $.getJSON(json, (data) => {
+      let arrayTodoList = [];
       let obj = JSON.parse(JSON.stringify(data));
       for (let i = 0; i < obj.todo.length; i++) {
-        aryId.push(obj.todo[i].id);
+        arrayTodoList.push(obj.todo[i].id);
       }
-      let maxId = Math.max(...aryId);
+      let maxId = Math.max(...arrayTodoList);
 
       //inputタグを生成
-      let checkbox = $("<input>").attr({
-        id: maxId + 1,
-        type: "checkbox",
-        class: "list__item--checkbox",
-        value: todoItem,
-      });
+      let newCheckbox = makeNewCheckbox(maxId, inputValue);
 
-      //spanタグを生成してtitleを格納
-      let span = $("<span>").text(todoItem);
+      //labelタグを生成してtitleを格納
+      let newLabel = makeNewLabel(maxId).text(inputValue);
 
       //入力値をテキストにしてlistタグを生成
-      let list = createList().append(checkbox);
-      list = list.append(span);
+      let newlist = $("<li>").addClass("list__item").append(newCheckbox);
+      newlist = newlist.append(newLabel);
 
       // wrapを取得して中にlistタグを挿入;
-      $(".todo-list__item--wrap").append(list);
+      $(".todo-list__item--wrap").append(newlist);
       clearValue();
     });
   });
 
-  //入力値を取得
-  function getInputTodo() {
+  //入力値を取得（stringを返す）
+  function getInputValue() {
     let todoItem = $("#new-item").val();
     return todoItem;
   }
 
-  //liタグを生成して、DOMを生成する
-  function createList() {
-    let li = $("<li>").addClass("list__item");
-    return li;
+  //inputタグを生成
+  function makeNewCheckbox(maxId, inputValue) {
+    let newCheckbox = $("<input>").attr({
+      id: "list--" + (maxId + 1),
+      type: "checkbox",
+      class: "list__item--checkbox",
+      value: inputValue,
+    });
+    return newCheckbox;
+  }
+
+  //labelタグを生成する（jqueryオブジェクトを返す）
+  function makeNewLabel(maxId) {
+    let newLabel = $("<label>").attr({
+      for: "list--" + (maxId + 1),
+    });
+    return newLabel;
   }
 
   //inputタグの入力値をクリアする
   let clearValue = () => $("#new-item").val("");
 
   /* ==============================================
-  チェックボックスをクリックしたら完了・未完了を取得できる
+  チェックボックスをクリックしたらチェックされているtodoリストを生成する
   ============================================== */
-  $("#todo-list").on("click", function (e) {
-    console.log(e.target);
-    $(this).prop("checked", true);
-  });
 });
