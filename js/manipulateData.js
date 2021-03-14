@@ -5,13 +5,14 @@
 $(document).ready(function () {
   let json = "./data/todo.json";
 
+  //jsonからtodoリストを配列に格納する際に使用する
+  let arrayTodoList = [];
+
   /* ==============================================
   リストを取得して初期表示する
   ============================================== */
 
   $.getJSON(json, (data) => {
-    //jsonからtodoリストを配列に格納する際に使用する
-    let arrayTodoList = [];
     data.todo.forEach((item) => {
       //itemのstatusに状態を設定（0:未完了 1:完了）
       item.status = 0;
@@ -24,8 +25,8 @@ $(document).ready(function () {
       let label = makeLabel(item).text(item.title);
 
       //listタグの子要素にlabelタグを追加し、
-      let li = $("<li>").addClass("list__item").append(checkbox[0]);
-      li.append(label[0]);
+      let li = $("<li>").addClass("list__item").append(checkbox);
+      li.append(label);
       $(".todo-list__item--wrap").append(li);
     });
   });
@@ -64,12 +65,12 @@ $(document).ready(function () {
 
     // jsonデータを取得して、idを取得。次のidを生成する
     $.getJSON(json, (data) => {
-      let arrayTodoList = [];
+      let arrayTodoID = [];
       let obj = JSON.parse(JSON.stringify(data));
       for (let i = 0; i < obj.todo.length; i++) {
-        arrayTodoList.push(obj.todo[i].id);
+        arrayTodoID.push(obj.todo[i].id);
       }
-      let maxId = Math.max(...arrayTodoList);
+      let maxId = Math.max(...arrayTodoID);
 
       //inputタグを生成
       let newCheckbox = makeNewCheckbox(maxId, inputValue);
@@ -84,6 +85,10 @@ $(document).ready(function () {
       // wrapを取得して中にlistタグを挿入;
       $(".todo-list__item--wrap").append(newlist);
       clearValue();
+
+      //オブジェクトを生成して、配列に追加
+      arrayTodoList.push({ id: maxId + 1, title: inputValue, status: 0 });
+      console.log(arrayTodoList);
     });
   });
 
@@ -116,6 +121,24 @@ $(document).ready(function () {
   let clearValue = () => $("#new-item").val("");
 
   /* ==============================================
-  チェックボックスをクリックしたらチェックされているtodoリストを生成する
+  チェックボックスをクリックしたらそのリストに該当する配列のstatusを変更する
   ============================================== */
+
+  //クリックしたinputタグの中でもチェックボックスだけクリックしたときに起動
+  $(document).on("click", 'input[type="checkbox"]', function () {
+    //クリックしたcheckboxのIDを取得して、「list--」を削除
+    let id = this.id.replace("list--", "") - 1;
+
+    //もしクリックした要素のstatusが0（未）なら
+    if (arrayTodoList[id].status === 0) {
+      arrayTodoList[id].status = 1;
+      console.log(arrayTodoList);
+    }
+
+    //もしクリックした要素のstatusが1（済）なら
+    else if (arrayTodoList[id].status === 1) {
+      arrayTodoList[id].status = 0;
+      console.log(arrayTodoList);
+    }
+  });
 });
