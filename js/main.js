@@ -24,9 +24,13 @@ $(document).ready(function () {
       //labelタグを生成してtitleを格納
       let label = makeLabel(item).text(item.title);
 
+      //deleteBtnを生成する
+      let deleteBtn = makeDeleteBtn();
+
       //listタグの子要素にlabelタグを追加し、
       let li = $("<li>").addClass("list__item").append(checkbox);
       li.append(label);
+      li.append(deleteBtn);
       $(".todo-list__item--wrap").append(li);
     });
   });
@@ -48,6 +52,15 @@ $(document).ready(function () {
       for: "list--" + item.id,
     });
     return label;
+  }
+
+  // buttonタグを生成する
+  function makeDeleteBtn() {
+    let deleteBtn = $("<button>").attr({
+      class: "list__btn--delete",
+    });
+    deleteBtn.text("削除");
+    return deleteBtn;
   }
 
   /* ==============================================
@@ -78,9 +91,13 @@ $(document).ready(function () {
       // labelタグを生成してtitleを格納
       let newLabel = makeNewLabel(maxId).text(inputValue);
 
+      // buttonタグを生成する
+      let deleteBtn = makeDeleteBtn();
+
       // 入力値をテキストにしてlistタグを生成
       let newlist = $("<li>").addClass("list__item").append(newCheckbox);
-      newlist = newlist.append(newLabel);
+      newlist.append(newLabel);
+      newlist.append(deleteBtn);
 
       // wrapを取得して中にlistタグを挿入;
       $(".todo-list__item--wrap").append(newlist);
@@ -132,22 +149,21 @@ $(document).ready(function () {
 
     // もしクリックした要素のstatusが0（未）なら
     if (arrayTodoList[id].status === 0) {
+      // ステータスを更新
       arrayTodoList[id].status = 1;
-      console.log(arrayTodoList);
     }
 
     // もしクリックした要素のstatusが1（済）なら
     else if (arrayTodoList[id].status === 1) {
+      // ステータスを更新
       arrayTodoList[id].status = 0;
-      console.log(arrayTodoList);
     }
 
-    // 一度ステータスを更新して、配列を更新する
-    // 更新した配列で改めてDOMを生成する
+    // 一度リストを削除する
     $(".list__item").remove();
 
+    // 更新した配列で改めてDOMを生成する
     let domList = createDOM(arrayTodoList);
-    console.log(domList);
 
     for (let i = 0; i < domList.length; i++) {
       $(".todo-list__item--wrap").append(domList[i]);
@@ -173,11 +189,26 @@ $(document).ready(function () {
         for: "list--" + arrayTodoList[i].id,
       });
       label.text(arrayTodoList[i].title);
+
+      //buttonタグを生成
+      let deleteBtn = makeDeleteBtn();
+
+      //DOMを生成
       let li = $("<li>").addClass("list__item").append(checkbox);
       li.append(label);
+      li.append(deleteBtn);
 
       domList.push(li);
     }
     return domList;
   }
+
+  /* ==============================================
+  削除の挙動を作成する
+  -------------------------------------------------
+  リストを生成するときに削除ボタンを一緒に作成するようにする
+  削除ボタンを押したら、DOMを削除する
+  対象のDOM要素に対応する配列を削除する
+  削除後の配列でDOMを再描画する
+  ============================================== */
 });

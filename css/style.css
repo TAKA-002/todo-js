@@ -51,5 +51,14 @@ body {
   width: 20px;
   height: 20px;
   vertical-align: middle;
+  cursor: pointer;
+}
+
+.list__btn--delete {
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-left: 10px;
+  width: 45px;
+  cursor: pointer;
 }
 /*# sourceMappingURL=style.css.map */
