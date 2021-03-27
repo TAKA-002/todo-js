@@ -33,6 +33,8 @@ $(document).ready(function () {
       li.append(deleteBtn);
       $(".todo-list__item--wrap").append(li);
     });
+    console.log("＜初期表示＞");
+    console.log(arrayTodoList);
   });
 
   // inputタグを生成する（jqueryオブジェクトとかいうものを返す）
@@ -106,6 +108,9 @@ $(document).ready(function () {
       // オブジェクトを生成して、配列に追加
       arrayTodoList.push({ id: maxId + 1, title: inputValue, status: 0 });
     });
+
+    console.log("＜アイテム登録時＞");
+    console.log(arrayTodoList);
   });
 
   // 入力値を取得（stringを返す）
@@ -168,6 +173,9 @@ $(document).ready(function () {
     for (let i = 0; i < domList.length; i++) {
       $(".todo-list__item--wrap").append(domList[i]);
     }
+
+    console.log("＜チェックボックスクリック時＞");
+    console.log(arrayTodoList);
   });
 
   function createDOM(arrayTodoList) {
@@ -206,9 +214,26 @@ $(document).ready(function () {
   /* ==============================================
   削除の挙動を作成する
   -------------------------------------------------
-  リストを生成するときに削除ボタンを一緒に作成するようにする
   削除ボタンを押したら、DOMを削除する
   対象のDOM要素に対応する配列を削除する
   削除後の配列でDOMを再描画する
   ============================================== */
+
+  //削除ボタンをクリックした際のイベント登録
+  $(document).on("click", "button", function () {
+    // クリックしたボタンの要素の親要素を削除する
+    const targetList = $(this).parent();
+    targetList.remove();
+
+    // 配列から削除したアイテムの情報を消す
+    // クリックしたボタンの親要素からノードをたどって対象のIDを取得
+    let attrId = targetList.children("input").attr("id");
+
+    // IDから配列の中にあるオブジェクトのプロパティ名（添字）を取得
+    // let target = targetId.replace("list--", "") - 1;
+    let targetId = attrId.replace("list--", "");
+
+    // console.log("▼アイテム削除時");
+    // console.log(arrayTodoList);
+  });
 });
