@@ -223,17 +223,42 @@ $(document).ready(function () {
   $(document).on("click", "button", function () {
     // クリックしたボタンの要素の親要素を削除する
     const targetList = $(this).parent();
-    targetList.remove();
 
     // 配列から削除したアイテムの情報を消す
     // クリックしたボタンの親要素からノードをたどって対象のIDを取得
     let attrId = targetList.children("input").attr("id");
 
     // IDから配列の中にあるオブジェクトのプロパティ名（添字）を取得
-    // let target = targetId.replace("list--", "") - 1;
     let targetId = attrId.replace("list--", "");
+    targetId = Number(targetId);
 
-    // console.log("▼アイテム削除時");
-    // console.log(arrayTodoList);
+    // IDから配列の中のオブジェクトを特定して、削除する
+    for (let i = 0; i < arrayTodoList.length; i++) {
+      if (arrayTodoList[i].id === targetId) {
+        arrayTodoList.splice(i, 1);
+      }
+    }
+
+    // 削除したら再度配列のなかのオブジェクトのidを1からふっていく
+    arrayTodoList = resetItemId(arrayTodoList);
+
+    // 一度リストを削除する
+    $(".list__item").remove();
+
+    // idをふりなおした配列で、DOMを再構築する
+    let domList = createDOM(arrayTodoList);
+    for (let i = 0; i < domList.length; i++) {
+      $(".todo-list__item--wrap").append(domList[i]);
+    }
+
+    console.log("＜削除時＞");
+    console.log(arrayTodoList);
   });
+
+  function resetItemId(arrayTodoList) {
+    for (let i = 0; i < arrayTodoList.length; i++) {
+      arrayTodoList[i].id = i + 1;
+    }
+    return arrayTodoList;
+  }
 });
