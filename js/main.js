@@ -236,6 +236,7 @@ $(document).ready(function () {
     for (let i = 0; i < arrayTodoList.length; i++) {
       if (arrayTodoList[i].id === targetId) {
         arrayTodoList.splice(i, 1);
+        break;
       }
     }
 
@@ -261,4 +262,11 @@ $(document).ready(function () {
     }
     return arrayTodoList;
   }
+
+  /* ==============================================
+  フィルタリング機能
+  -------------------------------------------------
+  ラジオボタンで「完了」「未完了」「すべて」を選択
+  該当するTODOを非同期で表示するようにする
+  ============================================== */
 });

@@ -21,6 +21,22 @@
         </div>
       </form>
 
+      <div class="sort-btn--wrap">
+        <p class="sort-btn__title">並び替え</p>
+        <label for="btn--all" class="sort-btn__text">
+          <input id="btn--all" class="sort-btn__radio" type="radio" name="filtering" value="すべて" checked />
+          すべて
+        </label>
+        <label for="btn--completed" class="sort-btn__text">
+          <input id="btn--completed" class="sort-btn__radio" type="radio" name="filtering" value="完了" />
+          完了
+        </label>
+        <label for="btn--incomplete" class="sort-btn__text">
+          <input id="btn--incomplete" class="sort-btn__radio" type="radio" name="filtering" value="未完了" />
+          未完了
+        </label>
+      </div>
+
       <div id="todo-list">
         <ul class="todo-list__item--wrap">
           <!-- 生成されるリスト

@@ -1,0 +1,22 @@
+.sort-btn {
+  &--wrap {
+    padding: 15px 0 15px 30px;
+  }
+
+  &__title {
+    margin: 0 0 5px 5px;
+    font-size: 2rem;
+  }
+
+  &__text {
+    font-size: 1.6rem;
+  }
+
+  &__radio {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 4px;
+    margin-right: 0;
+  }
+}
