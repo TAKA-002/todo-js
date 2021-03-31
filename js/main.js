@@ -168,7 +168,7 @@ $(document).ready(function () {
     $(".list__item").remove();
 
     // 更新した配列で改めてDOMを生成する
-    let domList = createDOM(arrayTodoList);
+    let domList = createAllTodo(arrayTodoList);
 
     for (let i = 0; i < domList.length; i++) {
       $(".todo-list__item--wrap").append(domList[i]);
@@ -178,7 +178,7 @@ $(document).ready(function () {
     console.log(arrayTodoList);
   });
 
-  function createDOM(arrayTodoList) {
+  function createAllTodo(arrayTodoList) {
     const domList = [];
     for (let i = 0; i < arrayTodoList.length; i++) {
       //inputタグ（checkbox）を作成
@@ -247,7 +247,7 @@ $(document).ready(function () {
     $(".list__item").remove();
 
     // idをふりなおした配列で、DOMを再構築する
-    let domList = createDOM(arrayTodoList);
+    let domList = createAllTodo(arrayTodoList);
     for (let i = 0; i < domList.length; i++) {
       $(".todo-list__item--wrap").append(domList[i]);
     }
@@ -269,4 +269,101 @@ $(document).ready(function () {
   ラジオボタンで「完了」「未完了」「すべて」を選択
   該当するTODOを非同期で表示するようにする
   ============================================== */
+
+  // inputのradioボタンをクリックしたときにイベント発生
+  $(document).on("click", "input[type='radio']", function () {
+    // 最初にすべての表示をクリアする
+    $(".list__item").remove();
+
+    // 「すべて」を選択したら配列の中身を再描画（statusごとに状態もそのままに表示させたい）
+    if ($(this).is("[id=btn--all]")) {
+      let domList = createAllTodo(arrayTodoList);
+      for (let i = 0; i < domList.length; i++) {
+        $(".todo-list__item--wrap").append(domList[i]);
+      }
+    }
+
+    // 「完了」を選択したらstatusが１のものだけで再描画
+    if ($(this).is("[id=btn--completed]")) {
+      let domList = createCompTodo(arrayTodoList);
+      for (let i = 0; i < domList.length; i++) {
+        $(".todo-list__item--wrap").append(domList[i]);
+      }
+    }
+
+    // 「未完了」を選択したらstatusが0のものだけで再描画
+    if ($(this).is("[id=btn--incomplete]")) {
+      let domList = createInCompTodo(arrayTodoList);
+      for (let i = 0; i < domList.length; i++) {
+        $(".todo-list__item--wrap").append(domList[i]);
+      }
+    }
+  });
+
+  function createCompTodo(arrayTodoList) {
+    const domList = [];
+    for (let i = 0; i < arrayTodoList.length; i++) {
+      if (arrayTodoList[i].status === 0) {
+        continue;
+      }
+      //inputタグ（checkbox）を作成
+      let checkbox = $("<input>").attr({
+        id: "list--" + arrayTodoList[i].id,
+        type: "checkbox",
+        class: "list__item--checkbox",
+        value: arrayTodoList[i].title,
+      });
+      checkbox.prop("checked", true);
+
+      //labelタグの生成
+      let label = $("<label>").attr({
+        for: "list--" + arrayTodoList[i].id,
+      });
+      label.text(arrayTodoList[i].title);
+
+      //buttonタグを生成
+      let deleteBtn = makeDeleteBtn();
+
+      //DOMを生成
+      let li = $("<li>").addClass("list__item").append(checkbox);
+      li.append(label);
+      li.append(deleteBtn);
+
+      domList.push(li);
+    }
+    return domList;
+  }
+
+  function createInCompTodo(arrayTodoList) {
+    const domList = [];
+    for (let i = 0; i < arrayTodoList.length; i++) {
+      if (arrayTodoList[i].status === 1) {
+        continue;
+      }
+      //inputタグ（checkbox）を作成
+      let checkbox = $("<input>").attr({
+        id: "list--" + arrayTodoList[i].id,
+        type: "checkbox",
+        class: "list__item--checkbox",
+        value: arrayTodoList[i].title,
+      });
+
+      //labelタグの生成
+      let label = $("<label>").attr({
+        for: "list--" + arrayTodoList[i].id,
+      });
+      label.text(arrayTodoList[i].title);
+
+      //buttonタグを生成
+      let deleteBtn = makeDeleteBtn();
+
+      //DOMを生成
+      let li = $("<li>").addClass("list__item").append(checkbox);
+      li.append(label);
+      li.append(deleteBtn);
+
+      domList.push(li);
+    }
+    return domList;
+  }
 });
